@@ -13,16 +13,17 @@ export class HomeComponent implements OnInit {
   password = '';
   invalidLogin = false;
 
-  constructor(private router: Router, private login: AuthenticationService) { }
+  constructor(private router: Router, private loginservice: AuthenticationService) { }
 
   ngOnInit() {
   }
 
-  checkLogin(){
-    if(this.login.authenticate(this.username, this.password)){
-      this.router.navigate(['/dashboard']);
+  checkLogin() {
+    if (this.loginservice.authenticate(this.username, this.password)
+    ) {
+      this.router.navigate(['dashboard']);
       this.invalidLogin = false;
-    }else{
+    } else{
       this.invalidLogin = true;
     }
   }

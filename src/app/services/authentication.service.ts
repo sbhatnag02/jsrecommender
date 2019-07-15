@@ -7,22 +7,22 @@ export class AuthenticationService {
 
   constructor() { }
 
-  authenticate(username, password){
-    if(username == 'user' && password == 'password'){
+  authenticate(username, password) {
+    if (username === "user" && password === "password") {
       sessionStorage.setItem('username', username);
       return true;
-    }else{
+    } else {
       return false;
     }
   }
 
-  isUserLoggedIn(){
-    let user = sessionStorage.getItem('username');
-    console.log(!(user == null));
-    return !(user == null);
+  isUserLoggedIn() {
+    let user = sessionStorage.getItem('username')
+    console.log(!(user === null));
+    return !(user === null);
   }
 
-  logOut(){
+  logOut() {
     sessionStorage.removeItem('username');
   }
 }
