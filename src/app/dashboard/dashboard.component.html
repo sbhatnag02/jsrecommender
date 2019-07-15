@@ -1,0 +1,12 @@
+<div class="jumbotron text-center">
+    <h1>User Dashboard</h1> 
+    <p>Rate the Items Below</p> 
+</div>
+
+<div *ngIf="users" class="row">
+    <div *ngFor = "let user of users.data" class="column">
+      <div class="card">
+        <p>{{ user.first_name}} {{ user.last_name }}</p>
+      </div>
+    </div>
+</div>
