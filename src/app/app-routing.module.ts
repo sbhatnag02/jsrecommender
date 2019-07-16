@@ -4,12 +4,13 @@ import { HomeComponent } from './home/home.component';
 import { NavComponent } from './nav/nav.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LogoutComponent } from './logout/logout.component';
+import { AuthGaurdService } from './services/auth-guard.service';
 
-const routes: Routes =[
+const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'nav', component: NavComponent},
-  {path: 'dashboard', component: DashboardComponent},
-  {path: 'logout', component: LogoutComponent}
+  {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGaurdService]},
+  {path: 'logout', component: LogoutComponent, canActivate: [AuthGaurdService]}
 ];
 
 @NgModule({

@@ -9,7 +9,7 @@ import { AuthenticationService } from '../services/authentication.service';
 })
 export class HomeComponent implements OnInit {
 
-  username = 'user';
+  username = '';
   password = '';
   invalidLogin = false;
 
