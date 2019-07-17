@@ -10,6 +10,7 @@ import { NavComponent } from './nav/nav.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LogoutComponent } from './logout/logout.component';
 import { FormsModule } from '@angular/forms';
+import { FileUploadComponent } from './file-upload/file-upload.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { FormsModule } from '@angular/forms';
     HomeComponent,
     NavComponent,
     DashboardComponent,
-    LogoutComponent
+    LogoutComponent,
+    FileUploadComponent
   ],
   imports: [
     BrowserModule,

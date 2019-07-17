@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
   checkLogin() {
     if (this.loginservice.authenticate(this.username, this.password)
     ) {
-      this.router.navigate(['dashboard']);
+      this.router.navigate(['file-upload']);
       this.invalidLogin = false;
     } else{
       this.invalidLogin = true;
