@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {TestImageDataService} from '../test-jsonhttp-data';
 import { Chart } from 'chart.js';
+import firebase from 'firebase';
 
 @Component({
   selector: 'app-dashboard',
@@ -49,6 +50,7 @@ export class DashboardComponent implements OnInit {
   constructor(private data: TestImageDataService) { }
 
   ngOnInit() {
+
     this.data.getUsers().subscribe(data => {
         this.users = data;
         console.log(this.users);
