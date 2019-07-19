@@ -5,6 +5,7 @@ import {HttpClientModule} from '@angular/common/http';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -14,6 +15,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { LogoutComponent } from './logout/logout.component';
 import { FormsModule } from '@angular/forms';
 import { FileUploadComponent } from './file-upload/file-upload.component';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -29,13 +31,9 @@ import { FileUploadComponent } from './file-upload/file-upload.component';
     FormsModule,
     AppRoutingModule,
     HttpClientModule,
-    AngularFireModule.initializeApp({
-      apiKey: 'AIzaSyCuPQgDDfCttdnGE-XmE9KxPt_QCmGHavA',
-      authDomain: 'js-recommender.firebaseapp.com',
-      storageBucket: 'gs://js-recommender.appspot.com',
-      projectId: 'js-recommender',
-    }),
-    AngularFireStorageModule
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireStorageModule,
+    AngularFireDatabaseModule
   ],
   providers: [],
   bootstrap: [AppComponent]

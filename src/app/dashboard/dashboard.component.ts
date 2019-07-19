@@ -57,6 +57,43 @@ export class DashboardComponent implements OnInit {
       }
     );
 
+    this.generateLineChart();
+    this.generateBarChart();
+    this.generatePieChart();
+  }
+
+  generateBarChart(){
+    // Bar chart:
+    this.BarChart = new Chart('barChart', {
+      type: 'bar',
+      data: {
+        labels: this.labels,
+        datasets: [{
+          label: 'Number of Items Sold in Months',
+          data: this.chartData,
+          backgroundColor: this.chartColors,
+    borderColor: this.chartBorders,
+        borderWidth: 1
+      }]
+    },
+    options: {
+    title: {
+        text: "Bar Chart",
+        display: true
+    },
+
+    scales: {
+        yAxes: [{
+            ticks: {
+                beginAtZero: true
+            }
+        }]
+    }
+    }
+    });
+  }
+
+  generateLineChart(){
     this.LineChart = new Chart('lineChart', {
       type: 'line',
       data: {
@@ -84,26 +121,27 @@ export class DashboardComponent implements OnInit {
         }
        }
       });
+  }
 
-    // Bar chart:
-    this.BarChart = new Chart('barChart', {
-      type: 'bar',
-      data: {
-        labels: this.labels,
-        datasets: [{
-          label: 'Number of Items Sold in Months',
-          data: this.chartData,
-          backgroundColor: this.chartColors,
-     borderColor: this.chartBorders,
+  generatePieChart(){
+    // pie chart:
+    this.PieChart = new Chart('pieChart', {
+      type: 'pie',
+    data: {
+    labels: this.labels,
+    datasets: [{
+        label: 'Number of Items Sold in Months',
+        data: this.chartData,
+        backgroundColor: this.chartColors,
+        borderColor: this.chartBorders,
         borderWidth: 1
-      }]
+    }]
     },
     options: {
     title: {
-        text: "Bar Chart",
+        text:'Pie Chart',
         display: true
     },
-  
     scales: {
         yAxes: [{
             ticks: {
@@ -112,36 +150,7 @@ export class DashboardComponent implements OnInit {
         }]
     }
     }
-});
-
-// pie chart:
-    this.PieChart = new Chart('pieChart', {
-  type: 'pie',
-data: {
- labels: this.labels,
- datasets: [{
-     label: 'Number of Items Sold in Months',
-     data: this.chartData,
-     backgroundColor: this.chartColors,
-     borderColor: this.chartBorders,
-     borderWidth: 1
- }]
-},
-options: {
- title: {
-     text:'Pie Chart',
-     display: true
- },
- scales: {
-     yAxes: [{
-         ticks: {
-             beginAtZero: true
-         }
-     }]
- }
-}
-});
-
+    });
   }
 
 }
