@@ -5,6 +5,7 @@ import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference 
 import { Observable } from 'rxjs/Observable';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { ProductDataService } from '../services/product-data.service';
+import { DataObj } from '../file-upload/data-obj';
 
 @Component({
   selector: 'app-file-upload',
@@ -29,13 +30,15 @@ export class FileUploadComponent implements OnInit {
   upload(event) {
     this.file = event.target.files[0];
     this.uploadDocument(this.file);
+    // const data: DataObj = JSON.parse('{ "month: "Jan", "numProductsSold": 9 }');
+    // console.log(data.month);
+    // console.log(data.numProductsSold);
 
-    const dataObj = {
-      month: 'April',
-      itemsSold: 3
+    const sampleData = {
+      month: 'May',
+      itemsSold: 4
     };
-    // this.productdataservice.addData(event.target.files[0]);
-    this.productdataservice.addData(dataObj);
+    this.productdataservice.addData(sampleData);
 
     const id = 'dataset';
     this.ref = this.storage.ref(id);
@@ -51,7 +54,8 @@ export class FileUploadComponent implements OnInit {
     let fileReader = new FileReader();
     fileReader.onload = (e) => {
       console.log(fileReader.result);
-      console.log(JSON.parse(fileReader.result.toString()));
+      const dataobj: DataObj[] = JSON.parse(fileReader.result.toString());
+      console.log(dataobj);
     }
     fileReader.readAsText(this.file);
   }
