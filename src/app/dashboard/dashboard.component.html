@@ -3,20 +3,11 @@
     <p>Rate the Items Below</p> 
 </div>
 
-<div *ngIf="users" class="row">
-    <div *ngFor = "let user of users.data" class="column">
-      <div class="card">
-        <p>{{ user.first_name}} {{ user.last_name }}</p>
-      </div>
-    </div>
-</div>
 <div class="chart-container" style="position: relative; height:20vh; width:20">
 
   <div>
-    <pre>
-      {{ dataList | json }}
-    </pre>
-    <button class="btn btn-primary" type="button" (click) = "getDataList()">Get Data List</button>
+    <button class="btn btn-primary" type="button" (click) = "updateDashboard()" style='margin-right:16px'>Click to Update Dashboard</button>
+    <button class="btn btn-primary" type="button" (click) = "goBackToFileUpload()" style='margin-right:16px'>Upload New Data</button>
   </div>
 
   <canvas id="lineChart"></canvas>

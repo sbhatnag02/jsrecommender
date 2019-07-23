@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {TestImageDataService} from '../test-jsonhttp-data';
 import { Chart } from 'chart.js';
-import firebase from 'firebase';
 import { ProductDataService } from '../services/product-data.service';
-import { DataObj } from '../file-upload/data-obj';
 import { IData } from '../dashboard/idata';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -15,6 +14,11 @@ export class DashboardComponent implements OnInit {
 
   users: Object;
   dataList: IData[];
+  dataAsJSON: Object;
+  dataKey: string;
+  dataLength: number;
+
+  Charts = [];
 
   LineChart = [];
   BarChart = [];
@@ -48,22 +52,22 @@ export class DashboardComponent implements OnInit {
     'rgba(127, 0, 255, 1)'
   ];
 
-  labels = ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-  chartData = [9, 7, 3, 5, 2, 10, 15, 16, 19, 3, 1, 9];
+  labels = [];
+  chartData = [];
 
-  constructor(private dataService: ProductDataService) { }
+  constructor(private dataService: ProductDataService, private router: Router) { }
 
   ngOnInit() {
 
-    // this.data.getUsers().subscribe(data => {
-    //     this.users = data;
-    //     console.log(this.users);
-    //   }
-    // );
+  }
 
-    this.generateLineChart();
-    this.generateBarChart();
-    this.generatePieChart();
+  updateDashboard() {
+    this.getDataList();
+  }
+
+  goBackToFileUpload() {
+    this.dataService.removeData(this.dataKey);
+    this.router.navigate(['file-upload']);
   }
 
   generateBarChart(){
@@ -95,6 +99,7 @@ export class DashboardComponent implements OnInit {
     }
     }
     });
+    this.Charts.push(this.BarChart);
   }
 
   generateLineChart(){
@@ -125,6 +130,7 @@ export class DashboardComponent implements OnInit {
         }
        }
       });
+    this.Charts.push(this.LineChart);
   }
 
   generatePieChart(){
@@ -155,18 +161,63 @@ export class DashboardComponent implements OnInit {
     }
     }
     });
+    this.Charts.push(this.PieChart);
   }
 
   getDataList() {
+    this.dataLength = 0;
     this.dataService.getDataFromFirebase().snapshotChanges().forEach(dataSnapshots => {
       this.dataList = [];
       dataSnapshots.forEach(dataSnapshot => {
         let dataItem = dataSnapshot.payload.val();
-        console.log(dataItem[1]);
+        this.dataAsJSON = dataSnapshot.payload.toJSON();
+        console.log(this.dataAsJSON);
+
+        this.dataLength = Object.keys(this.dataAsJSON).length;
+        console.log(this.dataLength);
+
+        console.log(this.dataAsJSON[7].Month);
+        console.log(this.dataAsJSON[7].Sold);
+        console.log(this.dataAsJSON[15] == null);
+
+        this.updateLocalData();
+
         dataItem['$key'] = dataSnapshot.key;
+        this.dataKey = dataSnapshot.key;
         this.dataList.push(dataItem as IData);
       });
     });
   }
 
+  updateLocalData() {
+    let index = 0;
+    while(index < this.dataLength){
+      if(this.dataAsJSON[index] != null) {
+        this.labels.push(this.dataAsJSON[index].Month);
+        this.chartData.push(this.dataAsJSON[index].Sold);
+      }
+      console.log(index);
+      index++;
+    }
+    console.log(this.labels[0]);
+    this.generateColors(this.dataLength);
+    this.generateLineChart();
+    this.generateBarChart();
+    this.generatePieChart();
+  }
+
+  generateColors(numColors: number) {
+    let index = 0;
+    while(index < numColors){
+      let newColor = 'rgba(' + this.randomInt(50, 200) + ', ' + this.randomInt(50, 200) + ', ' +
+      this.randomInt(50, 200) + ', ' + this.randomInt(0.5, 1) + ')';
+      this.chartColors[index] = newColor;
+      this.chartBorders[index] = newColor;
+      index = index + 1;
+    }
+  }
+
+  randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 }

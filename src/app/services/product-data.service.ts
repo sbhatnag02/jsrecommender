@@ -10,7 +10,6 @@ export class ProductDataService {
   private path = '/data';
   private firebase;
   private dataList: AngularFireList<any>;
-  private firebaseDatabase: AngularFireDatabase;
 
   constructor(private database: AngularFireDatabase) {
     this.dataList = this.database.list('data');
@@ -18,12 +17,16 @@ export class ProductDataService {
 
   addData(data){
     this.firebase = this.database.database.ref(this.path);
-    this.firebase.push(data);
+    this.dataList.push(data);
     console.log('Data Push was Successful');
   }
 
   getDataFromFirebase() {
     return this.dataList;
+  }
+
+  removeData($key: string) {
+    this.dataList.remove($key);
   }
 
 }
