@@ -1,4 +1,5 @@
 export class DataObj {
+    $key: string;
     month: string;
     sold: number;
 

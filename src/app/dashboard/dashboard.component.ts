@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {TestImageDataService} from '../test-jsonhttp-data';
 import { Chart } from 'chart.js';
 import firebase from 'firebase';
+import { ProductDataService } from '../services/product-data.service';
+import { DataObj } from '../file-upload/data-obj';
+import { IData } from '../dashboard/idata';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,6 +14,7 @@ import firebase from 'firebase';
 export class DashboardComponent implements OnInit {
 
   users: Object;
+  dataList: IData[];
 
   LineChart = [];
   BarChart = [];
@@ -47,15 +51,15 @@ export class DashboardComponent implements OnInit {
   labels = ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
   chartData = [9, 7, 3, 5, 2, 10, 15, 16, 19, 3, 1, 9];
 
-  constructor(private data: TestImageDataService) { }
+  constructor(private dataService: ProductDataService) { }
 
   ngOnInit() {
 
-    this.data.getUsers().subscribe(data => {
-        this.users = data;
-        console.log(this.users);
-      }
-    );
+    // this.data.getUsers().subscribe(data => {
+    //     this.users = data;
+    //     console.log(this.users);
+    //   }
+    // );
 
     this.generateLineChart();
     this.generateBarChart();
@@ -150,6 +154,18 @@ export class DashboardComponent implements OnInit {
         }]
     }
     }
+    });
+  }
+
+  getDataList() {
+    this.dataService.getDataFromFirebase().snapshotChanges().forEach(dataSnapshots => {
+      this.dataList = [];
+      dataSnapshots.forEach(dataSnapshot => {
+        let dataItem = dataSnapshot.payload.val();
+        console.log(dataItem[1]);
+        dataItem['$key'] = dataSnapshot.key;
+        this.dataList.push(dataItem as IData);
+      });
     });
   }
 

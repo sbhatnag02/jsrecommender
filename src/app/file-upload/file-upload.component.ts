@@ -30,15 +30,6 @@ export class FileUploadComponent implements OnInit {
   upload(event) {
     this.file = event.target.files[0];
     this.uploadDocument(this.file);
-    // const data: DataObj = JSON.parse('{ "month: "Jan", "numProductsSold": 9 }');
-    // console.log(data.month);
-    // console.log(data.numProductsSold);
-
-    const sampleData = {
-      month: 'May',
-      itemsSold: 4
-    };
-    this.productdataservice.addData(sampleData);
 
     const id = 'dataset';
     this.ref = this.storage.ref(id);
@@ -54,9 +45,11 @@ export class FileUploadComponent implements OnInit {
     let fileReader = new FileReader();
     fileReader.onload = (e) => {
       console.log(fileReader.result);
-      const dataobj: DataObj[] = JSON.parse(fileReader.result.toString());
-      console.log(dataobj);
-    }
+      const data: string = JSON.parse(fileReader.result.toString());
+      this.productdataservice.addData(data);
+      console.log('Data Push Completed');
+    };
+
     fileReader.readAsText(this.file);
   }
 

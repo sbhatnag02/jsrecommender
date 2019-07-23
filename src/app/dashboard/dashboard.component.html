@@ -11,6 +11,14 @@
     </div>
 </div>
 <div class="chart-container" style="position: relative; height:20vh; width:20">
+
+  <div>
+    <pre>
+      {{ dataList | json }}
+    </pre>
+    <button class="btn btn-primary" type="button" (click) = "getDataList()">Get Data List</button>
+  </div>
+
   <canvas id="lineChart"></canvas>
   <canvas id="barChart" ></canvas>
   <canvas id="pieChart"></canvas>  
