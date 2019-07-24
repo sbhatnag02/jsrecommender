@@ -17,6 +17,7 @@ export class DashboardComponent implements OnInit {
   dataAsJSON: Object;
   dataKey: string;
   dataLength: number;
+  dataKeys = [];
 
   Charts = [];
 
@@ -55,14 +56,16 @@ export class DashboardComponent implements OnInit {
       dataSnapshots.forEach(dataSnapshot => {
         let dataItem = dataSnapshot.payload.val();
         this.dataAsJSON = dataSnapshot.payload.toJSON();
-        console.log(this.dataAsJSON);
+        // console.log(this.dataAsJSON);
 
         this.dataLength = Object.keys(this.dataAsJSON).length;
         console.log(this.dataLength);
 
+        this.dataKeys = Object.keys(this.dataAsJSON[0]);
+        console.log(this.dataKeys);
+
         console.log(this.dataAsJSON[7].Month);
         console.log(this.dataAsJSON[7].Sold);
-        console.log(this.dataAsJSON[15] == null);
 
         this.updateLocalData();
 
@@ -77,10 +80,21 @@ export class DashboardComponent implements OnInit {
     let index = 0;
     while(index < this.dataLength){
       if(this.dataAsJSON[index] != null) {
-        this.labels.push(this.dataAsJSON[index].Month);
-        this.chartData.push(this.dataAsJSON[index].Sold);
+        const labelsString = this.dataAsJSON[index].Month;
+        const dataString = this.dataAsJSON[index].Sold;
+        if(!isNaN(labelsString)) {
+          this.labels.push(Number(labelsString));
+        } else {
+          this.labels.push(this.dataAsJSON[index].Month);
+        }
+        if(!isNaN(dataString)) {
+          this.chartData.push(Number(dataString));
+          console.log(Number(dataString));
+        } else{
+          this.chartData.push(this.dataAsJSON[index].Sold);
+        }
       }
-      console.log(index);
+      console.log(JSON.stringify(this.dataAsJSON[index]));
       index++;
     }
     console.log(this.labels[0]);

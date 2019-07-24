@@ -17,7 +17,7 @@ export class ProductDataService {
 
   addData(data){
     this.firebase = this.database.database.ref(this.path);
-    this.dataList.push(data);
+    this.firebase.push(data);
     console.log('Data Push was Successful');
   }
 

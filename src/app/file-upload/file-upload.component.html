@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <br>
-            <h3>Upload Dataset</h3>
+            <h3>Upload JSON Dataset</h3>
             <form (ngSubmit)="goToDashboard()">
                 <div class="form-group">
                     <input type="file" (change)="upload($event)">
@@ -14,8 +14,35 @@
                          aria-valuemax="100">
                         </div>
                 </div>
-                <br>
-            
+                <br><br>
+
+                <h3>Upload CSV Dataset</h3>
+                <div class="form-group">
+                    <input type="file" (change)="uploadCSV($event)">
+                </div>
+                <div class="progress">
+                        <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
+                         [style.width]="(uploadProgress | async) + '%'" 
+                         [attr.aria-valuenow]="(uploadProgress | async)" aria-valuemin="0" 
+                         aria-valuemax="100">
+                        </div>
+                </div>
+                <br><br>
+
+                <h3>Upload XML Dataset</h3>
+                <div class="form-group">
+                    <input type="file" (change)="uploadXML($event)">
+                </div>
+                <div class="progress">
+                        <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
+                         [style.width]="(uploadProgress | async) + '%'" 
+                         [attr.aria-valuenow]="(uploadProgress | async)" aria-valuemin="0" 
+                         aria-valuemax="100">
+                        </div>
+                </div>
+                <br><br>
+
+
                 <div class="form-group">
                     <button class="btn btn-primary">Go to Dashboard</button>
                 </div>
