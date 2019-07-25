@@ -19,6 +19,8 @@ export class DashboardComponent implements OnInit {
   dataLength: number;
   dataKeys = [];
 
+  plotData: boolean = false;
+
   Charts = [];
 
   LineChart = [];
@@ -37,11 +39,11 @@ export class DashboardComponent implements OnInit {
   constructor(private dataService: ProductDataService, private router: Router) { }
 
   ngOnInit() {
-
+    this.getDataList();
   }
 
   updateDashboard() {
-    this.getDataList();
+    location.reload();
   }
 
   goBackToFileUpload() {
@@ -64,9 +66,6 @@ export class DashboardComponent implements OnInit {
         this.dataKeys = Object.keys(this.dataAsJSON[0]);
         console.log(this.dataKeys);
 
-        console.log(this.dataAsJSON[7].Month);
-        console.log(this.dataAsJSON[7].Sold);
-
         this.updateLocalData();
 
         dataItem['$key'] = dataSnapshot.key;
@@ -77,38 +76,81 @@ export class DashboardComponent implements OnInit {
   }
 
   updateLocalData() {
+    console.log(this.dataAsJSON);
     let index = 0;
     while(index < this.dataLength){
       if(this.dataAsJSON[index] != null) {
-        const labelsString = this.dataAsJSON[index].Month;
-        const dataString = this.dataAsJSON[index].Sold;
+        let jsonObj = this.dataAsJSON[index];
+        const labelsString = jsonObj[Object.keys(jsonObj)[0]];
+        const dataString = jsonObj[Object.keys(jsonObj)[1]];
+
         if(!isNaN(labelsString)) {
           this.labels.push(Number(labelsString));
+          this.plotData = false;
         } else {
-          this.labels.push(this.dataAsJSON[index].Month);
+          this.labels.push(labelsString);
+          this.plotData = true;
         }
+
         if(!isNaN(dataString)) {
           this.chartData.push(Number(dataString));
-          console.log(Number(dataString));
+          this.plotData = true;
         } else{
-          this.chartData.push(this.dataAsJSON[index].Sold);
+          this.chartData.push(dataString);
+          this.plotData = false;
         }
       }
-      console.log(JSON.stringify(this.dataAsJSON[index]));
       index++;
     }
-    console.log(this.labels[0]);
+    this.checkData();
     this.generateColors(this.dataLength);
     this.generateGraphs();
   }
 
+  checkData() {
+    if (!this.plotData) {
+      const copyLabels = this.labels;
+      this.labels = this.chartData;
+      this.chartData = copyLabels;
+    }
+  }
+
   generateGraphs() {
-    this.generateLineChart();
-    this.generateBarChart();
-    this.generatePieChart();
-    this.generateRadarGraph();
-    this.generatePolarAreaChart();
-    this.generateDoughnutChart();
+    try {
+      this.generateLineChart();
+    } catch(err) {
+      alert('Unable to Generate Line Chart from Provided Dataset');
+    }
+
+    try {
+      this.generateBarChart();
+    } catch(err) {
+      alert('Unable to Generate Bar Chart from Provided Dataset');
+    }
+
+    try {
+      this.generatePieChart();
+    } catch(err) {
+      alert('Unable to Generate Pie Chart from Provided Dataset');
+    }
+
+    try {
+      this.generateRadarGraph();
+    } catch(err) {
+      alert('Unable to Generate Radar Chart from Provided Dataset');
+    }
+
+    try {
+      this.generatePolarAreaChart();
+    } catch(err) {
+      alert('Unable to Generate Polar Area Chart from Provided Dataset');
+    }
+
+    try {
+      this.generateDoughnutChart();
+    } catch(err) {
+      alert('Unable to Generate Doughnut Chart from Provided Dataset');
+    }
   }
 
   generateColors(numColors: number) {
