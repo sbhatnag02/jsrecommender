@@ -25,7 +25,6 @@ export class FileUploadComponent implements OnInit {
               private productdataservice: ProductDataService, private ngxXml2jsonService: NgxXml2jsonService) { }
 
   ngOnInit() {
-    
   }
 
   uploadXML(event) {

@@ -8,11 +8,54 @@
   <div>
     <button class="btn btn-primary" type="button" (click) = "updateDashboard()" style='margin-right:16px'>Click to Update Dashboard</button>
     <button class="btn btn-primary" type="button" (click) = "goBackToFileUpload()" style='margin-right:16px'>Upload New Data</button>
+    <button class="btn btn-primary" type="button" (click) = "updateRatings()" style='margin-right:16px'>Update and Save Ratings</button>
   </div>
+  <div>
+    <div>
+      <canvas id="lineChart"></canvas>
+      <ngb-rating [(rate)]="currentRateLine" id="lineRating"></ngb-rating>
+      <hr>
+      <pre>Rate: <b>{{currentRateLine}}</b></pre>
+      <br><br>
+    </div>
 
-  <canvas id="lineChart" width="800" height="600"></canvas><br><br>
-  <canvas id="barChart" width="800" height="600"></canvas><br><br>
-  <canvas id="pieChart" width="800" height="600"></canvas><br><br>
-  <canvas id="radar-chart" width="800" height="600"></canvas><br><br>
-  <canvas id="polar-chart" width="800" height="600"></canvas><br><br>
-  <canvas id="doughnut-chart" width="800" height="600"></canvas><br><br>  <canvas id="barChart" ></canvas></div>
+    <div>
+        <canvas id="barChart"></canvas><br><br>
+        <ngb-rating [(rate)]="currentRateBar"  id="barRating"></ngb-rating>
+        <hr>
+        <pre>Rate: <b>{{currentRateBar}}</b></pre>
+        <br><br>
+    </div>
+
+    <div>
+        <canvas id="pieChart"></canvas><br><br>
+        <ngb-rating [(rate)]="currentRatePie"  id="pieRating"></ngb-rating>
+        <hr>
+        <pre>Rate: <b>{{currentRatePie}}</b></pre>
+        <br><br>
+    </div>
+
+    <div>
+        <canvas id="radar-chart"></canvas><br><br>
+        <ngb-rating [(rate)]="currentRateRadar"  id="radarRating"></ngb-rating>
+        <hr>
+        <pre>Rate: <b>{{currentRateRadar}}</b></pre>
+        <br><br>
+    </div>
+
+    <div>
+        <canvas id="polar-chart"></canvas><br><br>
+        <ngb-rating [(rate)]="currentRatePolar"  id="polarRating"></ngb-rating>
+        <hr>
+        <pre>Rate: <b>{{currentRatePolar}}</b></pre>
+        <br><br>
+    </div>
+
+    <div>
+        <canvas id="doughnut-chart"></canvas><br><br>  
+        <ngb-rating [(rate)]="currentRateDoughnut"  id="doughnutRating"></ngb-rating>
+        <hr>
+        <pre>Rate: <b>{{currentRateDoughnut}}</b></pre>
+        <br><br>
+    </div>
+  </div>

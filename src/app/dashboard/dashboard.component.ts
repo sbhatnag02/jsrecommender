@@ -19,6 +19,9 @@ export class DashboardComponent implements OnInit {
   dataLength: number;
   dataKeys = [];
 
+  charts = ['Line', 'Bar', 'Pie', 'Radar', 'Polar', 'Doughnut'];
+  ratings = [];
+
   plotData: boolean = false;
 
   Charts = [];
@@ -40,6 +43,73 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.getDataList();
+    console.log(this.dataService.getCurrentUser());
+  }
+
+  updateRatings() {
+    let ratingElement = document.getElementById('lineRating');
+    let rating = ratingElement.getAttribute('ng-reflect-rate');
+    if(isNaN(Number(rating))){
+      rating = '0';
+    }
+    this.ratings.push(Number(rating));
+
+    ratingElement = document.getElementById('barRating');
+    rating = ratingElement.getAttribute('ng-reflect-rate');
+    if(isNaN(Number(rating))){
+      rating = '0';
+    }
+    this.ratings.push(Number(rating));
+
+    ratingElement = document.getElementById('pieRating');
+    rating = ratingElement.getAttribute('ng-reflect-rate');
+    if(isNaN(Number(rating))){
+      rating = '0';
+    }
+    this.ratings.push(Number(rating));
+
+    ratingElement = document.getElementById('radarRating');
+    rating = ratingElement.getAttribute('ng-reflect-rate');
+    if(isNaN(Number(rating))){
+      rating = '0';
+    }
+    this.ratings.push(Number(rating));
+
+    ratingElement = document.getElementById('polarRating');
+    rating = ratingElement.getAttribute('ng-reflect-rate');
+    if(isNaN(Number(rating))){
+      rating = '0';
+    }
+    this.ratings.push(Number(rating));
+
+    ratingElement = document.getElementById('doughnutRating');
+    rating = ratingElement.getAttribute('ng-reflect-rate');
+    if(isNaN(Number(rating))){
+      rating = '0';
+    }
+    this.ratings.push(Number(rating));
+
+    let ratingsJSONString = '{"user": "' + this.dataService.getCurrentUser() + '", ';
+    let index = 0;
+    while(index < this.charts.length) {
+      if(index != this.charts.length - 1) {
+        ratingsJSONString += '"' + this.charts[index] + '":' + this.ratings[index] + ', ';
+      } else {
+        ratingsJSONString += '"' + this.charts[index] + '":' + this.ratings[index] + '}';
+      }
+      index++;
+    }
+
+    console.log(this.ratings);
+    console.log(this.charts);
+    console.log(ratingsJSONString);
+    this.uploadRatings(ratingsJSONString);
+  }
+
+  uploadRatings(jsonString){
+      const ratingsData: string = JSON.parse(jsonString);
+      this.dataService.addUserPreferences(ratingsData);
+      console.log('Ratings Data Push Completed');
   }
 
   updateDashboard() {
@@ -118,37 +188,37 @@ export class DashboardComponent implements OnInit {
   generateGraphs() {
     try {
       this.generateLineChart();
-    } catch(err) {
+    } catch(DOMException) {
       alert('Unable to Generate Line Chart from Provided Dataset');
     }
 
     try {
       this.generateBarChart();
-    } catch(err) {
+    } catch(DOMException) {
       alert('Unable to Generate Bar Chart from Provided Dataset');
     }
 
     try {
       this.generatePieChart();
-    } catch(err) {
+    } catch(DOMException) {
       alert('Unable to Generate Pie Chart from Provided Dataset');
     }
 
     try {
       this.generateRadarGraph();
-    } catch(err) {
+    } catch(DOMException) {
       alert('Unable to Generate Radar Chart from Provided Dataset');
     }
 
     try {
       this.generatePolarAreaChart();
-    } catch(err) {
+    } catch(DOMException) {
       alert('Unable to Generate Polar Area Chart from Provided Dataset');
     }
 
     try {
       this.generateDoughnutChart();
-    } catch(err) {
+    } catch(DOMException) {
       alert('Unable to Generate Doughnut Chart from Provided Dataset');
     }
   }
@@ -323,6 +393,32 @@ export class DashboardComponent implements OnInit {
           display: true,
           text: 'Doughnut Chart'
         }
+      }
+    });
+  }
+
+  addListeners(){
+    let stars = document.querySelectorAll('.star');
+    [].forEach.call(stars, function(star, index){
+      star.addEventListener('click', (function(idx){
+        console.log('adding rating on', index);
+        document.querySelector('.stars').setAttribute('data-rating',  idx + 1);
+        console.log('Rating is now', idx+1);
+        this.setRating();
+      }).bind(window,index) );
+    });
+  }
+
+  setRating(){
+    const stars = document.querySelectorAll('.star');
+    const rating = parseInt( document.querySelector('.stars').getAttribute('data-rating'));
+    [].forEach.call(stars, function(star, index){
+      if(rating > index){
+        star.classList.add('rated');
+        console.log('added rated on', index );
+      }else{
+        star.classList.remove('rated');
+        console.log('removed rated on', index );
       }
     });
   }
