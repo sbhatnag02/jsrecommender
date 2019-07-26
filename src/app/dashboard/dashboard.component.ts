@@ -33,17 +33,24 @@ export class DashboardComponent implements OnInit {
   PolarAreaChart = [];
   DoughnutChart = [];
 
+  chartPreferences = [];
+
   chartColors = [];
   chartBorders = [];
 
   labels = [];
   chartData = [];
 
+  user;
+
   constructor(private dataService: ProductDataService, private router: Router) { }
 
   ngOnInit() {
-    this.getDataList();
-    console.log(this.dataService.getCurrentUser());
+    if(this.dataService.getCurrentUser() == null){
+      this.router.navigate(['logout']);
+    } else {
+      this.getDataList();
+    }
   }
 
   updateRatings() {
@@ -109,11 +116,41 @@ export class DashboardComponent implements OnInit {
   uploadRatings(jsonString){
       const ratingsData: string = JSON.parse(jsonString);
       this.dataService.addUserPreferences(ratingsData);
-      console.log('Ratings Data Push Completed');
+  }
+
+  assignPreferences(ratingItem) {
+    let preferences = [];
+    preferences = [['Bar', ratingItem.Bar], ['Doughnut', ratingItem.Doughnut], ['Line', ratingItem.Line],
+    ['Pie', ratingItem.Pie], ['Polar', ratingItem.Polar], ['Radar', ratingItem.Radar]];
+    return preferences;
+  }
+
+  checkUserMatch(user, ratingItem) {
+    if (user === ratingItem.user) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   updateDashboard() {
-    location.reload();
+    this.user = this.dataService.getCurrentUser();
+    console.log(this.user);
+    this.dataService.getRatingDataFromFirebase().snapshotChanges().forEach(ratingsSnapshots => {
+      ratingsSnapshots.forEach(ratingsSnapshot => {
+        let ratingItem = ratingsSnapshot.payload.toJSON();
+        if (this.checkUserMatch(this.user, ratingItem)) {
+          console.log(ratingItem);
+          this.chartPreferences = this.assignPreferences(ratingItem);
+          this.chartPreferences.sort(function(a, b) {
+            return b[1] - a[1];
+          });
+          console.log(this.chartPreferences);
+        }
+        console.log(this.checkUserMatch(this.user, ratingItem));
+      });
+    });
+    this.generateGraphs();
   }
 
   goBackToFileUpload() {
@@ -174,7 +211,7 @@ export class DashboardComponent implements OnInit {
     }
     this.checkData();
     this.generateColors(this.dataLength);
-    this.generateGraphs();
+    this.updateDashboard();
   }
 
   checkData() {
@@ -186,41 +223,69 @@ export class DashboardComponent implements OnInit {
   }
 
   generateGraphs() {
-    try {
-      this.generateLineChart();
-    } catch(DOMException) {
-      alert('Unable to Generate Line Chart from Provided Dataset');
+
+    let index = 0;
+    while (index < this.chartPreferences.length) {
+      switch(this.chartPreferences[index][0]) {
+        case 'Line':
+          this.generateLineChart('chart' + (index + 1));
+          break;
+        case 'Bar':
+          this.generateBarChart('chart' + (index + 1));
+          break;
+        case 'Pie':
+          this.generatePieChart('chart' + (index + 1));
+          break;
+        case 'Radar':
+          this.generateRadarGraph('chart' + (index + 1));
+          break;
+        case 'Polar':
+          this.generatePolarAreaChart('chart' + (index + 1));
+          break;
+        case 'Doughnut':
+            this.generateDoughnutChart('chart' + (index + 1));
+          break;
+      }
+
+      index++;
     }
 
-    try {
-      this.generateBarChart();
-    } catch(DOMException) {
-      alert('Unable to Generate Bar Chart from Provided Dataset');
-    }
 
-    try {
-      this.generatePieChart();
-    } catch(DOMException) {
-      alert('Unable to Generate Pie Chart from Provided Dataset');
-    }
+    // try {
+    //   this.generateLineChart();
+    // } catch(DOMException) {
+    //   alert('Unable to Generate Line Chart from Provided Dataset');
+    // }
 
-    try {
-      this.generateRadarGraph();
-    } catch(DOMException) {
-      alert('Unable to Generate Radar Chart from Provided Dataset');
-    }
+    // try {
+    //   this.generateBarChart();
+    // } catch(DOMException) {
+    //   alert('Unable to Generate Bar Chart from Provided Dataset');
+    // }
 
-    try {
-      this.generatePolarAreaChart();
-    } catch(DOMException) {
-      alert('Unable to Generate Polar Area Chart from Provided Dataset');
-    }
+    // try {
+    //   this.generatePieChart();
+    // } catch(DOMException) {
+    //   alert('Unable to Generate Pie Chart from Provided Dataset');
+    // }
 
-    try {
-      this.generateDoughnutChart();
-    } catch(DOMException) {
-      alert('Unable to Generate Doughnut Chart from Provided Dataset');
-    }
+    // try {
+    //   this.generateRadarGraph();
+    // } catch(DOMException) {
+    //   alert('Unable to Generate Radar Chart from Provided Dataset');
+    // }
+
+    // try {
+    //   this.generatePolarAreaChart();
+    // } catch(DOMException) {
+    //   alert('Unable to Generate Polar Area Chart from Provided Dataset');
+    // }
+
+    // try {
+    //   this.generateDoughnutChart();
+    // } catch(DOMException) {
+    //   alert('Unable to Generate Doughnut Chart from Provided Dataset');
+    // }
   }
 
   generateColors(numColors: number) {
@@ -243,9 +308,9 @@ export class DashboardComponent implements OnInit {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  generateBarChart(){
+  generateBarChart(chartName){
     // Bar chart:
-    this.BarChart = new Chart('barChart', {
+    this.BarChart = new Chart(chartName, {
       type: 'bar',
       data: {
         labels: this.labels,
@@ -275,8 +340,8 @@ export class DashboardComponent implements OnInit {
     this.Charts.push(this.BarChart);
   }
 
-  generateLineChart(){
-    this.LineChart = new Chart('lineChart', {
+  generateLineChart(chartName){
+    this.LineChart = new Chart(chartName, {
       type: 'line',
       data: {
         labels: this.labels,
@@ -306,9 +371,9 @@ export class DashboardComponent implements OnInit {
     this.Charts.push(this.LineChart);
   }
 
-  generatePieChart(){
+  generatePieChart(chartName){
     // pie chart:
-    this.PieChart = new Chart('pieChart', {
+    this.PieChart = new Chart(chartName, {
       type: 'pie',
       data: {
         labels: this.labels,
@@ -327,8 +392,8 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  generateRadarGraph() {
-    this.RadarChart = new Chart('radar-chart', {
+  generateRadarGraph(chartName) {
+    this.RadarChart = new Chart(chartName, {
       type: 'radar',
       data: {
         labels: this.labels,
@@ -353,8 +418,8 @@ export class DashboardComponent implements OnInit {
   });
   }
 
-  generatePolarAreaChart() {
-    this.PolarAreaChart = new Chart('polar-chart', {
+  generatePolarAreaChart(chartName) {
+    this.PolarAreaChart = new Chart(chartName, {
         type: 'polarArea',
       data: {
         labels: this.labels,
@@ -375,8 +440,8 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  generateDoughnutChart() {
-    this.DoughnutChart = new Chart('doughnut-chart', {
+  generateDoughnutChart(chartName) {
+    this.DoughnutChart = new Chart(chartName, {
       type: 'doughnut',
       data: {
         labels: this.labels,
