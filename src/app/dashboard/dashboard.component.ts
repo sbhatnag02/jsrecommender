@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Chart } from 'chart.js';
 import { ProductDataService } from '../services/product-data.service';
 import { IData } from '../dashboard/idata';
@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
+  windowScrolled: boolean;
 
   users: Object;
   dataList: IData[];
@@ -487,5 +488,25 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+
+  scrollToTop() {
+    (function smoothscroll() {
+        var currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
+        if (currentScroll > 0) {
+            window.requestAnimationFrame(smoothscroll);
+            window.scrollTo(0, currentScroll - (currentScroll / 8));
+        }
+    })();
+  }
+
+  @HostListener("window:scroll", [])
+    onWindowScroll() {
+        if (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop > 100) {
+            this.windowScrolled = true;
+        } 
+       else if (this.windowScrolled && window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop < 10) {
+            this.windowScrolled = false;
+        }
+    }
 
 }

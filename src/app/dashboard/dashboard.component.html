@@ -59,3 +59,7 @@
         <br><br>
     </div>
   </div>
+
+<div class="scroll-to-top" [ngClass]="{'show-scrollTop': windowScrolled}">
+    <button class="btn btn-primary" type="button" (click) = "scrollToTop()()" style='margin-right:16px'>Scroll to Top</button>
+</div>
