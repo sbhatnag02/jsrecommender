@@ -17,6 +17,10 @@ export class ProductDataService {
 
   private foundUser: boolean = false;
   private currentUsersWithInfo = [];
+  private currentUserIndex = 0;
+
+  private allUserRatings = [];
+  private similarityRating = 0;
 
   constructor(private database: AngularFireDatabase, private firebaseAuth: AngularFireAuth, 
               private firestore: AngularFirestore) {
@@ -73,6 +77,86 @@ export class ProductDataService {
         this.addRatingData(userPreferences);
       }
     });
+  }
+
+  getAllRatings() {
+    let index = 0;
+    this.ratingsList.snapshotChanges().forEach(ratingsSnapshots => {
+      ratingsSnapshots.forEach(ratingsSnapshot => {
+        const ratingItem = ratingsSnapshot.payload.toJSON();
+        this.allUserRatings[index] = this.getRatingsFromItem(ratingItem);
+        index++;
+      });
+      this.showAllRatings();
+      this.computeRatingSimilarity();
+    });
+  }
+
+  findIndexOfCurrentUser() {
+    let i = 0;
+    let currentUserIndex = 0;
+
+    while (i < this.allUserRatings.length) {
+      const currentUser = this.getCurrentUser();
+      if (this.allUserRatings[i][this.allUserRatings[i].length - 1] == currentUser){
+        currentUserIndex = i;
+        return currentUserIndex;
+      }
+      i++;
+    }
+  }
+
+  computeRatingSimilarity() {
+    let currentUserInfoIndex = this.findIndexOfCurrentUser();
+    let mostSimilarUserIndex = 0;
+    let euclideanDistanceSum = Number.MAX_SAFE_INTEGER;
+    let count = 0;
+
+    let i = 0;
+    while(i < this.allUserRatings.length){
+      if(i != currentUserInfoIndex) {
+        let j = 0; let currentEuclideanDistanceSum = 0; count = 0;
+        while(j < this.allUserRatings[i].length - 1) {
+          if(this.allUserRatings[i][j] != 0 &&  this.allUserRatings[currentUserInfoIndex][j] != 0) {
+            currentEuclideanDistanceSum += Math.pow((this.allUserRatings[i][j] - this.allUserRatings[currentUserInfoIndex][j]), 2);
+            console.log(this.allUserRatings[i][j] - this.allUserRatings[currentUserInfoIndex][j]);
+          }
+          j++;
+          count++;
+        }
+        let newEuclideanSum = Number.MAX_SAFE_INTEGER;
+        if(count != 0){
+          newEuclideanSum = Math.sqrt(currentEuclideanDistanceSum) / (count);
+          newEuclideanSum = 1/(1+newEuclideanSum);
+        }
+        if(newEuclideanSum < euclideanDistanceSum) {
+          euclideanDistanceSum = newEuclideanSum;
+          mostSimilarUserIndex = i;
+          console.log(mostSimilarUserIndex);
+        }
+        console.log(this.allUserRatings[i]);
+        console.log(euclideanDistanceSum);
+      }
+      i++;
+    }
+    this.similarityRating = euclideanDistanceSum;
+    return mostSimilarUserIndex;
+  }
+
+  predictPreference(graphIndex) {
+    const similarityScore = this.similarityRating;
+    const predictedScore = Math.round(similarityScore * (this.allUserRatings[this.computeRatingSimilarity()][graphIndex]));
+    console.log(predictedScore);
+    return predictedScore;
+  }
+
+  showAllRatings() {
+    console.log(this.allUserRatings);
+  }
+
+  getRatingsFromItem(ratingItem) {
+    return [ratingItem.Bar, ratingItem.Doughnut, ratingItem.Line,
+    ratingItem.Pie, ratingItem.Polar, ratingItem.Radar, ratingItem.user];
   }
 
   updateRatingData(ratingKey, updatedPreferences) {

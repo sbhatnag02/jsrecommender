@@ -35,6 +35,13 @@ export class DashboardComponent implements OnInit {
   PolarAreaChart = [];
   DoughnutChart = [];
 
+  lineIndex = 1;
+  barIndex = 2;
+  pieIndex = 3;
+  radarIndex = 4;
+  polarIndex = 5;
+  doughnutIndex = 6;
+
   chartPreferences = [];
 
   chartColors = [];
@@ -51,46 +58,48 @@ export class DashboardComponent implements OnInit {
     if(this.dataService.getCurrentUser() == null) {
       this.router.navigate(['logout']);
     } else {
+      this.dataService.getAllRatings();
+      // this.dataService.computeRatingSimilarity();
     }
   }
 
   updateRatings() {
-    let ratingElement = document.getElementById('lineRating');
+    let ratingElement = document.getElementById('rating' + this.lineIndex);
     let rating = ratingElement.getAttribute('ng-reflect-rate');
     if(isNaN(Number(rating))){
       rating = '0';
     }
     this.ratings.push(Number(rating));
 
-    ratingElement = document.getElementById('barRating');
+    ratingElement = document.getElementById('rating' + this.barIndex);
     rating = ratingElement.getAttribute('ng-reflect-rate');
     if(isNaN(Number(rating))){
       rating = '0';
     }
     this.ratings.push(Number(rating));
 
-    ratingElement = document.getElementById('pieRating');
+    ratingElement = document.getElementById('rating' + this.pieIndex);
     rating = ratingElement.getAttribute('ng-reflect-rate');
     if(isNaN(Number(rating))){
       rating = '0';
     }
     this.ratings.push(Number(rating));
 
-    ratingElement = document.getElementById('radarRating');
+    ratingElement = document.getElementById('rating' + this.radarIndex);
     rating = ratingElement.getAttribute('ng-reflect-rate');
     if(isNaN(Number(rating))){
       rating = '0';
     }
     this.ratings.push(Number(rating));
 
-    ratingElement = document.getElementById('polarRating');
+    ratingElement = document.getElementById('rating' + this.polarIndex);
     rating = ratingElement.getAttribute('ng-reflect-rate');
     if(isNaN(Number(rating))){
       rating = '0';
     }
     this.ratings.push(Number(rating));
 
-    ratingElement = document.getElementById('doughnutRating');
+    ratingElement = document.getElementById('rating' + this.doughnutIndex);
     rating = ratingElement.getAttribute('ng-reflect-rate');
     if(isNaN(Number(rating))){
       rating = '0';
@@ -117,8 +126,24 @@ export class DashboardComponent implements OnInit {
 
   assignPreferences(ratingItem) {
     let preferences = [];
-    preferences = [['Bar', ratingItem.Bar], ['Doughnut', ratingItem.Doughnut], ['Line', ratingItem.Line],
-    ['Pie', ratingItem.Pie], ['Polar', ratingItem.Polar], ['Radar', ratingItem.Radar]];
+    let bar = ratingItem.Bar; let doughnut = ratingItem.Doughnut; let line = ratingItem.Line;
+    let pie = ratingItem.Pie; let polar = ratingItem.Polar; let radar = ratingItem.Radar;
+    if(bar == 0){
+      bar = this.dataService.predictPreference(0);
+    } else if (doughnut == 0) {
+      doughnut = this.dataService.predictPreference(1);
+    } else if (line == 0) {
+      line = this.dataService.predictPreference(2);
+    } else if (pie == 0) {
+      pie = this.dataService.predictPreference(3);
+    } else if (polar == 0) {
+      polar = this.dataService.predictPreference(4);
+    } else if (radar == 0) {
+      radar = this.dataService.predictPreference(5);
+    }
+
+    preferences = [['Bar', bar], ['Doughnut', doughnut], ['Line', line],
+    ['Pie', pie], ['Polar', polar], ['Radar', radar]];
     return preferences;
   }
 
@@ -249,26 +274,33 @@ export class DashboardComponent implements OnInit {
       switch(this.chartPreferences[index][0]) {
         case 'Line':
           this.generateLineChart('chart' + (index + 1));
+          this.lineIndex = index + 1;
           break;
         case 'Bar':
           this.generateBarChart('chart' + (index + 1));
+          this.barIndex = index + 1;
           break;
         case 'Pie':
           this.generatePieChart('chart' + (index + 1));
+          this.pieIndex = index + 1;
           break;
         case 'Radar':
           this.generateRadarGraph('chart' + (index + 1));
+          this.radarIndex = index + 1;
           break;
         case 'Polar':
           this.generatePolarAreaChart('chart' + (index + 1));
+          this.polarIndex = index + 1;
           break;
         case 'Doughnut':
             this.generateDoughnutChart('chart' + (index + 1));
+            this.doughnutIndex = index + 1;
             break;
       }
 
       index++;
     }
+    this.dataService.showAllRatings();
   }
 
   generateColors(numColors: number) {
