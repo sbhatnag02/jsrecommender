@@ -5,7 +5,7 @@
             <h3>Upload JSON Dataset</h3>
             <form (ngSubmit)="goToDashboard()">
                 <div class="form-group">
-                    <input type="file" (change)="upload($event)">
+                    <input type="file" (change)="upload($event)" accept=".json">
                 </div>
                 <div class="progress">
                         <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
@@ -18,7 +18,7 @@
 
                 <h3>Upload CSV Dataset</h3>
                 <div class="form-group">
-                    <input type="file" (change)="uploadCSV($event)">
+                    <input type="file" (change)="uploadCSV($event)" accept=".csv">
                 </div>
                 <div class="progress">
                         <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
@@ -31,7 +31,7 @@
 
                 <h3>Upload XML Dataset</h3>
                 <div class="form-group">
-                    <input type="file" (change)="uploadXML($event)">
+                    <input type="file" (change)="uploadXML($event)" accept=".xml">
                 </div>
                 <div class="progress">
                         <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
