@@ -20,18 +20,6 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-// Import angular-fusioncharts
-import { FusionChartsModule } from "angular-fusioncharts";
-
-// Import FusionCharts library and chart modules
-import * as FusionCharts from "fusioncharts";
-import * as Charts from "fusioncharts/fusioncharts.charts";
-
-import * as FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
-
-// Pass the fusioncharts library and chart modules
-FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme);
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,8 +27,7 @@ FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme);
     NavComponent,
     DashboardComponent,
     LogoutComponent,
-    FileUploadComponent,
-    FusionChartsModule
+    FileUploadComponent
   ],
   imports: [
     BrowserModule,
