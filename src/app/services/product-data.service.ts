@@ -52,11 +52,38 @@ export class ProductDataService {
   }
 
   addUserPreferences(userPreferences) {
-      this.getCurrentRatingInformation(userPreferences);
+    let userFound = false;
+    let ratingKey = '';
+    const userList = [];
+
+    this.ratingsList.snapshotChanges().forEach(ratingsSnapshots => {
+      ratingsSnapshots.forEach(ratingsSnapshot => {
+        const ratingItem = ratingsSnapshot.payload.toJSON();
+
+        if(this.getUser(ratingItem) == this.getCurrentUser()) {
+          console.log('User Data Exists, will be updated');
+          ratingKey = ratingsSnapshot.key;
+          userFound = true;
+        }
+      });
+
+      if (userFound) {
+        this.updateRatingData(ratingKey, userPreferences);
+      } else {
+        this.addRatingData(userPreferences);
+      }
+    });
+  }
+
+  updateRatingData(ratingKey, updatedPreferences) {
+    this.ratingsList.update(ratingKey, updatedPreferences);
+  }
+
+  getUser(ratingItem) {
+    return ratingItem.user;
   }
 
   getChartPreferences(user) {
-    let chartPrefernces = [];
     this.ratingsList.snapshotChanges().forEach(ratingsSnapshots => {
       ratingsSnapshots.forEach(ratingsSnapshot => {
         let ratingItem = ratingsSnapshot.payload.toJSON();
@@ -84,47 +111,10 @@ export class ProductDataService {
     }
   }
 
-  getCurrentRatingInformation(userPreferences) {
-    const userList = [];
-    this.ratingsList.snapshotChanges().forEach(ratingsSnapshots => {
-      // If there is no rating data in the database
-      const dataLength = ratingsSnapshots.length;
-      let currentCount = 0;
-      if(dataLength == 0) {
-        this.addLocalRatingData(null, userPreferences, null);
-      }
-
-      ratingsSnapshots.forEach(ratingsSnapshot => {
-        if(currentCount > dataLength){
-          return userList;
-        }
-        let ratingItem = ratingsSnapshot.payload.toJSON();
-        let ratingKey = ratingsSnapshot.key;
-        this.addLocalRatingData(ratingItem, userPreferences, ratingKey);
-        console.log(currentCount);
-        currentCount++;
-      });
-      return userList;
-    });
-    return userList;
-  }
-
-  addLocalRatingData(ratingItem, userPreferences, ratingKey) {
-    const currentUser = this.firebaseAuth.auth.currentUser.email;
-    if(currentUser != null) {
-      if(ratingItem == null){
-        this.firebase = this.database.database.ref(this.userPreferencesPath);
-        this.firebase.push(userPreferences);
-        console.log('Ratings Data Push Successful');
-      } else if (ratingItem.user == currentUser) {
-        this.ratingsList.update(ratingKey, userPreferences);
-        console.log('User already in system, data will be updated');
-      } else {
-        this.firebase = this.database.database.ref(this.userPreferencesPath);
-        this.firebase.push(userPreferences);
-        console.log('Ratings Data Push Successful');
-      }
-    }
+  addRatingData(userPreferences) {
+    this.firebase = this.database.database.ref(this.userPreferencesPath);
+    this.firebase.push(userPreferences);
+    console.log('Ratings Data Push Successful');
   }
 
   updateUserRatingData(userPreferences, ratingKey) {

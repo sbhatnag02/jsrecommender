@@ -3,6 +3,7 @@ import { Chart } from 'chart.js';
 import { ProductDataService } from '../services/product-data.service';
 import { IData } from '../dashboard/idata';
 import { Router } from '@angular/router';
+import { element, $ } from 'protractor';
 
 
 @Component({
@@ -47,10 +48,9 @@ export class DashboardComponent implements OnInit {
   constructor(private dataService: ProductDataService, private router: Router) { }
 
   ngOnInit() {
-    if(this.dataService.getCurrentUser() == null){
+    if(this.dataService.getCurrentUser() == null) {
       this.router.navigate(['logout']);
     } else {
-      this.getDataList();
     }
   }
 
@@ -107,10 +107,6 @@ export class DashboardComponent implements OnInit {
       }
       index++;
     }
-
-    console.log(this.ratings);
-    console.log(this.charts);
-    console.log(ratingsJSONString);
     this.uploadRatings(ratingsJSONString);
   }
 
@@ -134,12 +130,25 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  clearGraphs() {
+    this.LineChart = [];
+    this.BarChart = [];
+    this.PieChart = [];
+    this.RadarChart = [];
+    this.PolarAreaChart = [];
+    this.DoughnutChart = [];
+  }
+
   updateDashboard() {
+    this.clearGraphs();
+
     this.user = this.dataService.getCurrentUser();
     console.log(this.user);
+
     this.dataService.getRatingDataFromFirebase().snapshotChanges().forEach(ratingsSnapshots => {
       ratingsSnapshots.forEach(ratingsSnapshot => {
         let ratingItem = ratingsSnapshot.payload.toJSON();
+
         if (this.checkUserMatch(this.user, ratingItem)) {
           console.log(ratingItem);
           this.chartPreferences = this.assignPreferences(ratingItem);
@@ -148,10 +157,9 @@ export class DashboardComponent implements OnInit {
           });
           console.log(this.chartPreferences);
         }
-        console.log(this.checkUserMatch(this.user, ratingItem));
       });
     });
-    this.generateGraphs();
+    this.getDataList();
   }
 
   goBackToFileUpload() {
@@ -212,7 +220,7 @@ export class DashboardComponent implements OnInit {
     }
     this.checkData();
     this.generateColors(this.dataLength);
-    this.updateDashboard();
+    this.generateGraphs();
   }
 
   checkData() {
@@ -224,6 +232,17 @@ export class DashboardComponent implements OnInit {
   }
 
   generateGraphs() {
+    console.log('Generating Graphs');
+    console.log(this.chartPreferences);
+
+    if(this.chartPreferences.length == 0) {
+      this.generateLineChart('chart' + (1));
+      this.generateBarChart('chart' + (2));
+      this.generatePieChart('chart' + (3));
+      this.generateRadarGraph('chart' + (4));
+      this.generatePolarAreaChart('chart' + (5));
+      this.generateDoughnutChart('chart' + (6));
+    }
 
     let index = 0;
     while (index < this.chartPreferences.length) {
@@ -245,48 +264,11 @@ export class DashboardComponent implements OnInit {
           break;
         case 'Doughnut':
             this.generateDoughnutChart('chart' + (index + 1));
-          break;
+            break;
       }
 
       index++;
     }
-
-
-    // try {
-    //   this.generateLineChart();
-    // } catch(DOMException) {
-    //   alert('Unable to Generate Line Chart from Provided Dataset');
-    // }
-
-    // try {
-    //   this.generateBarChart();
-    // } catch(DOMException) {
-    //   alert('Unable to Generate Bar Chart from Provided Dataset');
-    // }
-
-    // try {
-    //   this.generatePieChart();
-    // } catch(DOMException) {
-    //   alert('Unable to Generate Pie Chart from Provided Dataset');
-    // }
-
-    // try {
-    //   this.generateRadarGraph();
-    // } catch(DOMException) {
-    //   alert('Unable to Generate Radar Chart from Provided Dataset');
-    // }
-
-    // try {
-    //   this.generatePolarAreaChart();
-    // } catch(DOMException) {
-    //   alert('Unable to Generate Polar Area Chart from Provided Dataset');
-    // }
-
-    // try {
-    //   this.generateDoughnutChart();
-    // } catch(DOMException) {
-    //   alert('Unable to Generate Doughnut Chart from Provided Dataset');
-    // }
   }
 
   generateColors(numColors: number) {
@@ -316,7 +298,7 @@ export class DashboardComponent implements OnInit {
       data: {
         labels: this.labels,
         datasets: [{
-          label: 'Number of Items Sold in Months',
+          label: '',
           data: this.chartData,
           backgroundColor: this.chartColors,
     borderColor: this.chartBorders,
@@ -347,7 +329,7 @@ export class DashboardComponent implements OnInit {
       data: {
         labels: this.labels,
         datasets: [{
-          label: 'Number of Items Sold in Months',
+          label: '',
           data: this.chartData,
           fill: false,
           lineTension: 0.2,
@@ -379,7 +361,7 @@ export class DashboardComponent implements OnInit {
       data: {
         labels: this.labels,
         datasets: [{
-          label: "Products Sold Each Month",
+          label: "",
           backgroundColor: this.chartColors,
           data: this.chartData
         }]
@@ -400,7 +382,7 @@ export class DashboardComponent implements OnInit {
         labels: this.labels,
         datasets: [
           {
-            label: 'Products Sold Each Month',
+            label: '',
             fill: true,
             backgroundColor: this.generateColor(),
             borderColor: this.generateColor(),
@@ -426,7 +408,7 @@ export class DashboardComponent implements OnInit {
         labels: this.labels,
         datasets: [
           {
-            label: "Products Sold Each Month",
+            label: "",
             backgroundColor: this.chartColors,
             data: this.chartData
           }
@@ -448,7 +430,7 @@ export class DashboardComponent implements OnInit {
         labels: this.labels,
         datasets: [
           {
-            label: "Products Sold Each Month",
+            label: "",
             backgroundColor: this.chartColors,
             data: this.chartData
           }

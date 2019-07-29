@@ -64,7 +64,6 @@ export class HomeComponent implements OnInit {
   logoutUser() {
     this.authService.logout()
       .then(res => {
-        console.log(res);
         this.userDetails = undefined;
         localStorage.removeItem('user');
       }, err => {
@@ -77,7 +76,6 @@ export class HomeComponent implements OnInit {
     this.responseMessage = "";
     this.authService.login(this.emailInput, this.passwordInput)
       .then(res => {
-        console.log(res);
         this.showMessage("success", "Successfully Logged In!");
         this.isUserLoggedIn();
         sessionStorage.setItem('username', this.emailInput);
@@ -94,7 +92,6 @@ export class HomeComponent implements OnInit {
 
         // Send Varification link in email
         this.authService.sendEmailVerification().then(res => {
-          console.log(res);
           this.isForgotPassword = false;
           this.showMessage("success", "Registration Successful! Please Verify Your Email");
         }, err => {
@@ -112,7 +109,6 @@ export class HomeComponent implements OnInit {
   forgotPassword() {
     this.authService.sendPasswordResetEmail(this.emailInput)
       .then(res => {
-        console.log(res);
         this.isForgotPassword = false;
         this.showMessage("success", "Please Check Your Email");
       }, err => {
@@ -124,7 +120,6 @@ export class HomeComponent implements OnInit {
   googleLogin() {
     this.authService.loginWithGoogle()
       .then(res => {
-        console.log(res);
         this.showMessage("success", "Successfully Logged In with Google");
         this.isUserLoggedIn();
       }, err => {
