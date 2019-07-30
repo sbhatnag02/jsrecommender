@@ -3,14 +3,15 @@
     <p>Rate the Items Below</p> 
 </div>
 
-<div class="chart-container" style="position: relative; height:20vh; width:20">
 
-  <div>
-    <button class="btn btn-primary" type="button" (click) = "updateDashboard()" style='margin-right:16px'>Click to Update Dashboard</button>
-    <button class="btn btn-primary" type="button" (click) = "goBackToFileUpload()" style='margin-right:16px'>Upload New Data</button>
-    <button class="btn btn-primary" type="button" (click) = "updateRatings()" style='margin-right:16px'>Update and Save Ratings</button>
-  </div>
-  <div>
+<div>
+  <button class="btn btn-primary" type="button" (click) = "updateDashboard()" style='margin-right:16px'>Click to Update Dashboard</button>
+  <button class="btn btn-primary" type="button" (click) = "goBackToFileUpload()" style='margin-right:16px'>Upload New Data</button>
+  <button class="btn btn-primary" type="button" (click) = "updateRatings()" style='margin-right:16px'>Update and Save Ratings</button>
+</div>
+
+
+  <div class="chart-container-large" id="datarep1">
     <div>
       <canvas id="chart1"></canvas>
       <ngb-rating [(rate)]="currentRate1" id="rating1"></ngb-rating>
@@ -18,48 +19,59 @@
       <pre>Rate: <b>{{currentRate1}}</b></pre>
       <br><br>
     </div>
-
-    <div>
-        <canvas id="chart2"></canvas><br><br>
-        <ngb-rating [(rate)]="currentRate2"  id="rating2"></ngb-rating>
-        <hr>
-        <pre>Rate: <b>{{currentRate2}}</b></pre>
-        <br><br>
-    </div>
-
-    <div>
-        <canvas id="chart3"></canvas><br><br>
-        <ngb-rating [(rate)]="currentRate3"  id="rating3"></ngb-rating>
-        <hr>
-        <pre>Rate: <b>{{currentRate3}}</b></pre>
-        <br><br>
-    </div>
-
-    <div>
-        <canvas id="chart4"></canvas><br><br>
-        <ngb-rating [(rate)]="currentRate4"  id="rating4"></ngb-rating>
-        <hr>
-        <pre>Rate: <b>{{currentRate4}}</b></pre>
-        <br><br>
-    </div>
-
-    <div>
-        <canvas id="chart5"></canvas><br><br>
-        <ngb-rating [(rate)]="currentRate5"  id="rating5"></ngb-rating>
-        <hr>
-        <pre>Rate: <b>{{currentRate5}}</b></pre>
-        <br><br>
-    </div>
-
-    <div>
-        <canvas id="chart6"></canvas><br><br>  
-        <ngb-rating [(rate)]="currentRate6"  id="rating6"></ngb-rating>
-        <hr>
-        <pre>Rate: <b>{{currentRate6}}</b></pre>
-        <br><br>
-    </div>
   </div>
 
+  <div class="chart-container-large" id="datarep2">
+    <div>
+      <canvas id="chart2"></canvas><br><br>
+      <ngb-rating [(rate)]="currentRate2"  id="rating2"></ngb-rating>
+      <hr>
+      <pre>Rate: <b>{{currentRate2}}</b></pre>
+      <br><br>
+  </div>
+  </div>
+
+  <div class="chart-container-large" id="datarep3">
+    <div>
+      <canvas id="chart3"></canvas><br><br>
+      <ngb-rating [(rate)]="currentRate3"  id="rating3"></ngb-rating>
+      <hr>
+      <pre>Rate: <b>{{currentRate3}}</b></pre>
+      <br><br>
+  </div>
+  </div>
+
+  <div class="chart-container-large" id="datarep4">
+    <div>
+      <canvas id="chart4"></canvas><br><br>
+      <ngb-rating [(rate)]="currentRate4"  id="rating4"></ngb-rating>
+      <hr>
+      <pre>Rate: <b>{{currentRate4}}</b></pre>
+      <br><br>
+  </div>
+  </div>
+
+
+<div class="chart-container-large" id="datarep5">
+  <div>
+    <canvas id="chart5"></canvas><br><br>
+    <ngb-rating [(rate)]="currentRate5"  id="rating5"></ngb-rating>
+    <hr>
+    <pre>Rate: <b>{{currentRate5}}</b></pre>
+    <br><br>
+</div>  
+</div> 
+
+<div class="chart-container-large" id="datarep6">
+  <div>
+    <canvas id="chart6"></canvas><br><br>  
+    <ngb-rating [(rate)]="currentRate6"  id="rating6"></ngb-rating>
+    <hr>
+    <pre>Rate: <b>{{currentRate6}}</b></pre>
+    <br><br>
+  </div>
+</div>
+  
 <div class="scroll-to-top" [ngClass]="{'show-scrollTop': windowScrolled}">
     <button class="btn btn-primary" type="button" (click) = "scrollToTop()" style='margin-right:16px'>Scroll to Top</button>
 </div>

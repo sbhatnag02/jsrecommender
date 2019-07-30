@@ -145,8 +145,8 @@ export class ProductDataService {
 
   predictPreference(graphIndex) {
     const similarityScore = this.similarityRating;
+    console.log(this.allUserRatings[this.computeRatingSimilarity()][graphIndex]);
     const predictedScore = Math.round(similarityScore * (this.allUserRatings[this.computeRatingSimilarity()][graphIndex]));
-    console.log(predictedScore);
     return predictedScore;
   }
 

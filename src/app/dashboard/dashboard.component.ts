@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, NgZone } from '@angular/core';
 import { Chart } from 'chart.js';
 import { ProductDataService } from '../services/product-data.service';
 import { IData } from '../dashboard/idata';
@@ -52,14 +52,37 @@ export class DashboardComponent implements OnInit {
 
   user;
 
-  constructor(private dataService: ProductDataService, private router: Router) { }
+  public graph;
+
+  constructor(private dataService: ProductDataService, private router: Router, private zone: NgZone) { }
 
   ngOnInit() {
     if(this.dataService.getCurrentUser() == null) {
       this.router.navigate(['logout']);
     } else {
       this.dataService.getAllRatings();
-      // this.dataService.computeRatingSimilarity();
+    }
+  }
+
+  generatePlotlyGraph() {
+    this.graph = {
+      data: [
+          { x: [1, 2, 3], y: [2, 6, 3], type: 'scatter', mode: 'lines+points', marker: {color: 'red'} },
+          { x: [1, 2, 3], y: [2, 5, 3], type: 'bar' },
+      ],
+      layout: {width: 320, height: 240, title: 'A Fancy Plot'}
+    };
+  }
+
+  generatePlotlyLinePlot() {
+    const trace1 = {
+      x: this.labels,
+      y: this.chartData,
+      type: 'scatter'
+    };
+    this.graph = {
+      data: trace1,
+      layout: {width: 640, height: 480, title: 'A Line Plot'}
     }
   }
 
@@ -130,16 +153,22 @@ export class DashboardComponent implements OnInit {
     let pie = ratingItem.Pie; let polar = ratingItem.Polar; let radar = ratingItem.Radar;
     if(bar == 0){
       bar = this.dataService.predictPreference(0);
+      console.log(bar);
     } else if (doughnut == 0) {
       doughnut = this.dataService.predictPreference(1);
+      console.log(doughnut);
     } else if (line == 0) {
       line = this.dataService.predictPreference(2);
+      console.log(line);
     } else if (pie == 0) {
       pie = this.dataService.predictPreference(3);
+      console.log(pie);
     } else if (polar == 0) {
       polar = this.dataService.predictPreference(4);
+      console.log(polar);
     } else if (radar == 0) {
       radar = this.dataService.predictPreference(5);
+      console.log(radar);
     }
 
     preferences = [['Bar', bar], ['Doughnut', doughnut], ['Line', line],
@@ -372,6 +401,8 @@ export class DashboardComponent implements OnInit {
       options: {
         title: {
             text: 'Line Chart',
+            reponsive: true,
+            maintainAspectRatio: false,
             display: true
         },
         scales: {
@@ -384,6 +415,14 @@ export class DashboardComponent implements OnInit {
        }
       });
     this.Charts.push(this.LineChart);
+  }
+
+  combineDataAndLabelsToArray(){
+    let data = [];
+    for(let i = 0; i < this.chartData.length; i++) {
+      data.push({ "month": this.labels[i], "sold": this.chartData[i]});
+    }
+    return data;
   }
 
   generatePieChart(chartName){
