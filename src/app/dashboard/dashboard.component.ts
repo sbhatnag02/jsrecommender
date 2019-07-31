@@ -345,12 +345,15 @@ export class DashboardComponent implements OnInit {
   assignChartClass(rating, elementName, classIndex) {
     let chartElement = document.getElementById(elementName);
 
-    if(rating >= 8){
+    if(rating == 10){
       chartElement.className = '';
       this.classValue[classIndex] = '';
-    } else if(rating >= 5) {
+    } else if (rating >= 7) {
       chartElement.className = 'chart-container-large';
       this.classValue[classIndex] = 'chart-container-large';
+    } else if(rating >= 4) {
+      chartElement.className = 'chart-container-medium';
+      this.classValue[classIndex] = 'chart-container-medium';
     } else {
       chartElement.className = 'chart-container-small';
       this.classValue[classIndex] = 'chart-container-small';
