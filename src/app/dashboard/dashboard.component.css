@@ -54,13 +54,15 @@
    .show-scrollTop {
     opacity: 1;
     transition: all .2s ease-in-out;
-   } 
+   }
 
    .chart-container-large {
     width: 1000px;
     height:600px;
   }
   .chart-container-small {
-    width: 500px;
-    height:3000px
+    width: 600px;
+    height:450px;
+    /* padding-right: 100px; */
+    float: left
   }

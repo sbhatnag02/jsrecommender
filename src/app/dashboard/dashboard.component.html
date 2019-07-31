@@ -3,16 +3,14 @@
     <p>Rate the Items Below</p> 
 </div>
 
-
 <div>
   <button class="btn btn-primary" type="button" (click) = "updateDashboard()" style='margin-right:16px'>Click to Update Dashboard</button>
   <button class="btn btn-primary" type="button" (click) = "goBackToFileUpload()" style='margin-right:16px'>Upload New Data</button>
   <button class="btn btn-primary" type="button" (click) = "updateRatings()" style='margin-right:16px'>Update and Save Ratings</button>
 </div>
 
-
-  <div class="chart-container-large" id="datarep1">
-    <div>
+  <div id="datarep1">
+    <div [className]='classValue[0]'>
       <canvas id="chart1"></canvas>
       <ngb-rating [(rate)]="currentRate1" id="rating1"></ngb-rating>
       <hr>
@@ -21,8 +19,8 @@
     </div>
   </div>
 
-  <div class="chart-container-large" id="datarep2">
-    <div>
+  <div id="datarep2">
+    <div [className]='classValue[1]'>
       <canvas id="chart2"></canvas><br><br>
       <ngb-rating [(rate)]="currentRate2"  id="rating2"></ngb-rating>
       <hr>
@@ -31,8 +29,8 @@
   </div>
   </div>
 
-  <div class="chart-container-large" id="datarep3">
-    <div>
+  <div id="datarep3">
+    <div [className]='classValue[2]'>
       <canvas id="chart3"></canvas><br><br>
       <ngb-rating [(rate)]="currentRate3"  id="rating3"></ngb-rating>
       <hr>
@@ -41,8 +39,8 @@
   </div>
   </div>
 
-  <div class="chart-container-large" id="datarep4">
-    <div>
+  <div id="datarep4">
+    <div [className]='classValue[3]'>
       <canvas id="chart4"></canvas><br><br>
       <ngb-rating [(rate)]="currentRate4"  id="rating4"></ngb-rating>
       <hr>
@@ -52,8 +50,8 @@
   </div>
 
 
-<div class="chart-container-large" id="datarep5">
-  <div>
+<div id="datarep5">
+  <div [className]='classValue[4]'>
     <canvas id="chart5"></canvas><br><br>
     <ngb-rating [(rate)]="currentRate5"  id="rating5"></ngb-rating>
     <hr>
@@ -62,8 +60,8 @@
 </div>  
 </div> 
 
-<div class="chart-container-large" id="datarep6">
-  <div>
+<div id="datarep6">
+  <div [className]='classValue[5]'>
     <canvas id="chart6"></canvas><br><br>  
     <ngb-rating [(rate)]="currentRate6"  id="rating6"></ngb-rating>
     <hr>

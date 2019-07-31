@@ -11,5 +11,5 @@ am4core.useTheme(am4themes_animated);
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'angular-python-recommender';
+  title = 'Data-Visualization-and-Recommendation-Tool';
 }

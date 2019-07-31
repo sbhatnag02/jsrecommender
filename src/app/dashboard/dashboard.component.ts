@@ -50,6 +50,10 @@ export class DashboardComponent implements OnInit {
   labels = [];
   chartData = [];
 
+  chartClass1 = 'chart-container-large';
+  chartClass2 = 'chart-container-small';
+  classValue = ['', '', '', '', '', ''];
+
   user;
 
   public graph;
@@ -302,34 +306,55 @@ export class DashboardComponent implements OnInit {
     while (index < this.chartPreferences.length) {
       switch(this.chartPreferences[index][0]) {
         case 'Line':
+          this.assignChartClass(this.chartPreferences[index][1], 'chart' + (index + 1), index);
           this.generateLineChart('chart' + (index + 1));
           this.lineIndex = index + 1;
           break;
         case 'Bar':
+          this.assignChartClass(this.chartPreferences[index][1], 'chart' + (index + 1), index);
           this.generateBarChart('chart' + (index + 1));
           this.barIndex = index + 1;
           break;
         case 'Pie':
+          this.assignChartClass(this.chartPreferences[index][1], 'chart' + (index + 1), index);
           this.generatePieChart('chart' + (index + 1));
           this.pieIndex = index + 1;
           break;
         case 'Radar':
+          this.assignChartClass(this.chartPreferences[index][1], 'chart' + (index + 1), index);
           this.generateRadarGraph('chart' + (index + 1));
           this.radarIndex = index + 1;
           break;
         case 'Polar':
+          this.assignChartClass(this.chartPreferences[index][1], 'chart' + (index + 1), index);
           this.generatePolarAreaChart('chart' + (index + 1));
           this.polarIndex = index + 1;
           break;
         case 'Doughnut':
-            this.generateDoughnutChart('chart' + (index + 1));
-            this.doughnutIndex = index + 1;
-            break;
+          this.assignChartClass(this.chartPreferences[index][1], 'chart' + (index + 1), index);
+          this.generateDoughnutChart('chart' + (index + 1));
+          this.doughnutIndex = index + 1;
+          break;
       }
 
       index++;
     }
     this.dataService.showAllRatings();
+  }
+
+  assignChartClass(rating, elementName, classIndex) {
+    let chartElement = document.getElementById(elementName);
+
+    if(rating >= 8){
+      chartElement.className = '';
+      this.classValue[classIndex] = '';
+    } else if(rating >= 5) {
+      chartElement.className = 'chart-container-large';
+      this.classValue[classIndex] = 'chart-container-large';
+    } else {
+      chartElement.className = 'chart-container-small';
+      this.classValue[classIndex] = 'chart-container-small';
+    }
   }
 
   generateColors(numColors: number) {
