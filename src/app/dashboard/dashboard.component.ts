@@ -348,10 +348,10 @@ export class DashboardComponent implements OnInit {
     if(rating == 10){
       chartElement.className = '';
       this.classValue[classIndex] = '';
-    } else if (rating >= 7) {
+    } else if (rating >= 8) {
       chartElement.className = 'chart-container-large';
       this.classValue[classIndex] = 'chart-container-large';
-    } else if(rating >= 4) {
+    } else if(rating >= 5) {
       chartElement.className = 'chart-container-medium';
       this.classValue[classIndex] = 'chart-container-medium';
     } else {
