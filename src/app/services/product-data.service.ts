@@ -12,7 +12,7 @@ export class ProductDataService {
   private userPreferencesPath = '/ratings';
   private firebase;
 
-  private dataList: AngularFireList<any>;
+  public dataList: AngularFireList<any>;
   private ratingsList: AngularFireList<any>;
 
   private foundUser: boolean = false;

@@ -5,7 +5,6 @@ import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference 
 import { Observable } from 'rxjs/Observable';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { ProductDataService } from '../services/product-data.service';
-import { NgxXml2jsonService } from 'ngx-xml2json';
 
 @Component({
   selector: 'app-file-upload',
@@ -21,28 +20,60 @@ export class FileUploadComponent implements OnInit {
 
   file: any;
 
+  xml2Jsonobj: object;
+
   constructor(private router: Router, private http: HttpClient, private storage: AngularFireStorage,
-              private productdataservice: ProductDataService, private ngxXml2jsonService: NgxXml2jsonService) { }
+              private productdataservice: ProductDataService) { }
 
   ngOnInit() {
   }
 
-  uploadXML(event) {
-    alert('Choose different file format');
+  openFile(event) {
+    let input = event.target;
+    let text = '';
+    let fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      text = fileReader.result.toString();
+      console.log(text);
+      
+      let parseString = require('xml2js').parseString;
+      parseString(text, function (err, result) {
+        this.xml2Jsonobj = JSON.parse(JSON.stringify(result));
+        console.log(this.xml2Jsonobj);
+        console.dir(result);
+      });
 
-    const id = 'dataset';
-    this.ref = this.storage.ref(id);
-    this.task = this.ref.put(event.target.files[0]);
-    this.uploadProgress = this.task.percentageChanges();
+      const id = 'dataset';
+      this.ref = this.storage.ref(id);
+      this.task = this.ref.put(event.target.files[0]);
+      this.uploadProgress = this.task.percentageChanges();
+
+      this.uploadXML();
+    };
+
+    console.log(fileReader.readyState);
+    fileReader.readAsText(input.files[0]);
+    console.log(fileReader.readyState);
+
+  }
+
+  uploadXML() {
+    console.log(this.xml2Jsonobj);
   }
 
   uploadXMLDocument(file) {
-    const parser = new DOMParser();
-    const xml = parser.parseFromString('<Month>Jan</Month><Sold>9</Sold></element>'
-    + '<Month>Feb</Month><Sold>7</Sold>', 'text/xml');
-    const obj = this.ngxXml2jsonService.xmlToJson(xml);
-    console.log(JSON.stringify(obj));
-    console.log('Method Called External');
+    console.log(file);
+    const xmlText = new XMLSerializer().serializeToString(file);
+    console.log(xmlText);
+    // let fileReader = new FileReader();
+    // fileReader.onload = function (e) {
+    // };
+
+    // fileReader.addEventListener("loadend", function() {
+    //   file = document.getElementById('xmlUpload');
+    // });
+
+    // console.log(fileReader.readAsText(file));
   }
 
   uploadCSV(event) {
