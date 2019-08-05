@@ -22,6 +22,8 @@ export class FileUploadComponent implements OnInit {
 
   xml2Jsonobj: object;
 
+  xmlData: any;
+
   constructor(private router: Router, private http: HttpClient, private storage: AngularFireStorage,
               private productdataservice: ProductDataService) { }
 
@@ -34,31 +36,40 @@ export class FileUploadComponent implements OnInit {
     let fileReader = new FileReader();
     fileReader.onload = (e) => {
       text = fileReader.result.toString();
-      console.log(text);
-      
+
+      let data;
       let parseString = require('xml2js').parseString;
+
       parseString(text, function (err, result) {
-        this.xml2Jsonobj = JSON.parse(JSON.stringify(result));
-        console.log(this.xml2Jsonobj);
-        console.dir(result);
+        text = JSON.parse(JSON.stringify(result));
+        data = result.root.row;
       });
+
+      let dataArray = [];
+      let dataKeys = Object.keys(data[0]);
+      let dataKey1 = dataKeys[0];
+      let dataKey2 = dataKeys[1];
+
+      for(let i = 0; i < data.length; i++) {
+        let dataItem1 = data[i][dataKey1].toString();
+        let dataItem2 = data[i][dataKey2].toString();
+        dataArray[i] = [dataItem1, dataItem2];
+      }
+
+      data = JSON.parse(JSON.stringify(dataArray));
+      this.productdataservice.addData(data);
 
       const id = 'dataset';
       this.ref = this.storage.ref(id);
       this.task = this.ref.put(event.target.files[0]);
       this.uploadProgress = this.task.percentageChanges();
 
-      this.uploadXML();
     };
 
     console.log(fileReader.readyState);
     fileReader.readAsText(input.files[0]);
     console.log(fileReader.readyState);
 
-  }
-
-  uploadXML() {
-    console.log(this.xml2Jsonobj);
   }
 
   uploadXMLDocument(file) {
