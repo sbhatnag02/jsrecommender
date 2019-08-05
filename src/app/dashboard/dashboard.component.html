@@ -9,6 +9,25 @@
   <button class="btn btn-primary" type="button" (click) = "updateRatings()" style='margin-right:16px'>Update and Save Ratings</button>
 </div>
 
+<br><br>
+
+<div>
+  <p>Select X-Axis Data Label</p>
+  <select id="xaxis" name="xaxis" [(ngModel)]="xaxis">
+    <option *ngFor="let header of headers" [value]="header.id">
+      {{header.name}}
+    </option>
+  </select>
+  
+  <p>Select Y-Axis Data Label</p>
+  <select id="yaxis" name="yaxis" [(ngModel)]="yaxis">
+    <option *ngFor="let header of headers" [value]="header.id">
+      {{header.name}}
+    </option>
+  </select>
+
+</div>
+
   <div id="datarep1">
     <div [className]='classValue[0]'>
       <canvas id="chart1"></canvas>

@@ -49,6 +49,10 @@ export class DashboardComponent implements OnInit {
 
   labels = [];
   chartData = [];
+  
+  headers = [];
+  xAxisHeaderIndex = 0;
+  yAxisHeaderIndex = 0;
 
   chartClass1 = 'chart-container-large';
   chartClass2 = 'chart-container-small';
@@ -65,6 +69,7 @@ export class DashboardComponent implements OnInit {
       this.router.navigate(['logout']);
     } else {
       this.dataService.getAllRatings();
+      this.getHeaders();
     }
   }
 
@@ -203,26 +208,58 @@ export class DashboardComponent implements OnInit {
     this.user = this.dataService.getCurrentUser();
     console.log(this.user);
 
-    this.dataService.getRatingDataFromFirebase().snapshotChanges().forEach(ratingsSnapshots => {
-      ratingsSnapshots.forEach(ratingsSnapshot => {
-        let ratingItem = ratingsSnapshot.payload.toJSON();
+    const xAxisHeader = document.getElementById('xaxis');
+    const yAxisHeader = document.getElementById('yaxis');
+    console.log(xAxisHeader.getAttribute('class') == 'ng-untouched ng-pristine ng-valid');
 
-        if (this.checkUserMatch(this.user, ratingItem)) {
-          console.log(ratingItem);
-          this.chartPreferences = this.assignPreferences(ratingItem);
-          this.chartPreferences.sort(function(a, b) {
-            return b[1] - a[1];
-          });
-          console.log(this.chartPreferences);
-        }
+    if(xAxisHeader.getAttribute('class') == 'ng-untouched ng-pristine ng-valid') {
+      window.alert('Please select data fields to plot');
+    } else if (yAxisHeader.getAttribute('class') == 'ng-untouched ng-pristine ng-valid') {
+      window.alert('Please select data fields to plot');
+    } else {
+      this.xAxisHeaderIndex = Number.parseInt(xAxisHeader.getAttribute('ng-reflect-model'));
+      this.yAxisHeaderIndex = Number.parseInt(yAxisHeader.getAttribute('ng-reflect-model'));
+
+      console.log(this.headers[this.xAxisHeaderIndex].name);
+      console.log(this.headers[this.yAxisHeaderIndex].name);
+
+      this.dataService.getRatingDataFromFirebase().snapshotChanges().forEach(ratingsSnapshots => {
+        ratingsSnapshots.forEach(ratingsSnapshot => {
+          let ratingItem = ratingsSnapshot.payload.toJSON();
+
+          if (this.checkUserMatch(this.user, ratingItem)) {
+            console.log(ratingItem);
+            this.chartPreferences = this.assignPreferences(ratingItem);
+            this.chartPreferences.sort(function(a, b) {
+              return b[1] - a[1];
+            });
+            console.log(this.chartPreferences);
+          }
+        });
       });
-    });
-    this.getDataList();
+      this.getDataList();
+    }
   }
 
   goBackToFileUpload() {
     this.dataService.removeData(this.dataKey);
     this.router.navigate(['file-upload']);
+  }
+
+  getHeaders() {
+    this.dataLength = 0;
+    this.dataService.getDataFromFirebase().snapshotChanges().forEach(dataSnapshots => {
+      this.dataList = [];
+      dataSnapshots.forEach(dataSnapshot => {
+        let dataItem = dataSnapshot.payload.val();
+        this.dataAsJSON = dataSnapshot.payload.toJSON();
+        let keys = Object.keys(this.dataAsJSON[0]);
+        for(let i = 0; i < keys.length; i++) {
+          this.headers.push({id: i, name: keys[i].toString()});
+        }
+        console.log(this.headers);
+      });
+    });
   }
 
   getDataList() {
@@ -255,8 +292,8 @@ export class DashboardComponent implements OnInit {
     while(index < this.dataLength){
       if(this.dataAsJSON[index] != null) {
         let jsonObj = this.dataAsJSON[index];
-        const labelsString = jsonObj[Object.keys(jsonObj)[0]];
-        const dataString = jsonObj[Object.keys(jsonObj)[1]];
+        const labelsString = jsonObj[Object.keys(jsonObj)[this.xAxisHeaderIndex]];
+        const dataString = jsonObj[Object.keys(jsonObj)[this.yAxisHeaderIndex]];
 
         if(!isNaN(labelsString)) {
           this.labels.push(Number(labelsString));
@@ -420,7 +457,7 @@ export class DashboardComponent implements OnInit {
         datasets: [{
           label: '',
           data: this.chartData,
-          fill: false,
+          fill: true,
           lineTension: 0.2,
           borderColor:'red',
           borderWidth: 1
