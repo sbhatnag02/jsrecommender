@@ -20,12 +20,6 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { FusionChartsModule } from 'angular-fusioncharts';
-import * as FusionCharts from 'fusioncharts';
-import * as Charts from 'fusioncharts/fusioncharts.charts';
-import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
-
-// FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme);
 @NgModule({
   declarations: [
     AppComponent,
@@ -48,7 +42,6 @@ import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
     AngularFireAuthModule,
     AngularFirestoreModule,
     NgbModule,
-    FusionChartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
