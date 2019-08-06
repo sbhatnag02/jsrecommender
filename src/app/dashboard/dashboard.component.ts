@@ -49,8 +49,17 @@ export class DashboardComponent implements OnInit {
 
   labels = [];
   chartData = [];
-  
+
   headers = [];
+  xaxis = 'xaxis';
+  yaxis = 'yaxis';
+  currentRate1 = 'currentRate1';
+  currentRate2 = 'currentRate2';
+  currentRate3 = 'currentRate3';
+  currentRate4 = 'currentRate4';
+  currentRate5 = 'currentRate5';
+  currentRate6 = 'currentRate6';
+
   xAxisHeaderIndex = 0;
   yAxisHeaderIndex = 0;
 
@@ -194,12 +203,12 @@ export class DashboardComponent implements OnInit {
   }
 
   clearGraphs() {
-    this.LineChart = [];
-    this.BarChart = [];
-    this.PieChart = [];
-    this.RadarChart = [];
-    this.PolarAreaChart = [];
-    this.DoughnutChart = [];
+    this.LineChart = null;
+    this.BarChart = null;
+    this.PieChart = null;
+    this.RadarChart = null;
+    this.PolarAreaChart = null;
+    this.DoughnutChart = null;
   }
 
   updateDashboard() {

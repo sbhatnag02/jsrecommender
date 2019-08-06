@@ -1,0 +1,14 @@
+[
+  {
+    "productName": "image1",
+    "imgSource" : "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Ul.30Stycznia29..jpg/800px-Ul.30Stycznia29..jpg"
+  },
+  {
+    "productName": "image2",
+    "imgSource" : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Korail_Gyeongjeon_Line_Namgwangju_Station_Platform.jpg/800px-Korail_Gyeongjeon_Line_Namgwangju_Station_Platform.jpg"
+  },
+  {
+    "productName": "image3",
+    "imgSource" : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Utscheid_%28Eifel%29%3B_Katholische_Pfarrkirche_St._Peter_l.jpg/439px-Utscheid_%28Eifel%29%3B_Katholische_Pfarrkirche_St._Peter_l.jpg"
+  }
+]
